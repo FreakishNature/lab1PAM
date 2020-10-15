@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CheckStatusThread extends Thread {
     CopyOnWriteArrayList<String> queue;
+    int processingTime;
     Connection sqlConnection;
     String task;
     int id;
@@ -15,7 +16,7 @@ public class CheckStatusThread extends Thread {
     @Override
     public void run() {
         try {
-            Thread.sleep(2_000);
+            Thread.sleep(processingTime);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -38,5 +39,6 @@ public class CheckStatusThread extends Thread {
         this.id = id;
         this.sqlConnection = sqlConnection;
         this.task = task;
+        this.processingTime = processingTime;
     }
 }

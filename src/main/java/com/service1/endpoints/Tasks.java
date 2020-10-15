@@ -22,13 +22,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 public class Tasks {
-    final String HOST = "localhost";
 
     Connection sqlConnection = new NosqlConnection();
 
     {
         if (sqlConnection instanceof NosqlConnection) {
-            ((NosqlConnection) sqlConnection).establishConnection("localhost:27017");
+            ((NosqlConnection) sqlConnection).establishConnection(com.gateway.endpoints.Connection.HOST + ":27017");
             ((NosqlConnection) sqlConnection).selectCollection("data");
         }
     }
@@ -59,7 +58,7 @@ public class Tasks {
     public Object changeDatabase(@RequestParam String db) {
         if(db.equals("nosql")){
             sqlConnection = new NosqlConnection();
-            ((NosqlConnection) sqlConnection).establishConnection("localhost:27017");
+            ((NosqlConnection) sqlConnection).establishConnection(com.gateway.endpoints.Connection.HOST + ":27017");
             ((NosqlConnection) sqlConnection).selectCollection("data");
         } else if(db.equals("sql")){
             sqlConnection = new SqlConnection();

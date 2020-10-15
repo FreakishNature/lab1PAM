@@ -1,5 +1,7 @@
 package com.gateway.endpoints;
 
+import com.cache.CacheClient;
+import com.gateway.cache.Cache;
 import com.model.ConnectPortRequest;
 import com.model.CreateDataRequest;
 import com.model.ErrorResponse;
@@ -16,12 +18,14 @@ import org.springframework.web.client.RestTemplate;
 import java.net.SocketTimeoutException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 public class Connection {
-    final String HOST = "localhost";
+    public static String HOST = "localhost";
     List<String> ports = new ArrayList<>();
+
     RestTemplate restTemplate;
     int maxLoad = 3;
 
@@ -32,16 +36,35 @@ public class Connection {
                 .build();
     }
 
+    CacheClient client = new CacheClient(HOST,4001);
+    Cache cache = new Cache(client);
+
+    Connection() throws Exception {
+        client.start();
+        cache.auth("edik","onelove");
+    }
+
+
     @PostMapping
     public String createConnection(@RequestBody ConnectPortRequest connectPortRequest){
-        ports.add(connectPortRequest.getPort());
+        try {
+            cache.lpush("services",connectPortRequest.getPort());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         System.out.println("Connected with port : " + connectPortRequest.getPort());
         return "connected";
     }
 
     @GetMapping("/instances")
     public String getInstances(){
-        return Strings.join(ports,' ');
+        try {
+            return cache.get("services");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @PutMapping("/changeTimeout")
@@ -65,7 +88,11 @@ public class Connection {
         try{
             responseEntity = restTemplate.postForEntity("http://" + HOST +":" + port + "/create", entity, Object.class);
         }catch (Throwable ex){
-            ports.remove(port);
+            try {
+                cache.lrem("services",1, port);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return new ResponseEntity<>(new ErrorResponse("Timeout exception"),HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -103,6 +130,13 @@ public class Connection {
     }
 
     public String getPortWithMinimalLoad(){
+
+        try {
+            ports = Arrays.asList(cache.get("services").split(" ")[1].split(","));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         String portWithMinimalLoad = ports.get(0);
         int minLoad = restTemplate.getForObject("http://" + HOST +":" + ports.get(0) + "/getLoad", LoadResponse.class).getLoad();
 

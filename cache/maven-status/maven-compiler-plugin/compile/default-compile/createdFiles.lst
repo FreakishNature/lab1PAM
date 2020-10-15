@@ -1,0 +1,16 @@
+com\service1\Application.class
+com\service1\threads\ChangeStatusThread.class
+com\service1\endpoints\Tasks.class
+com\model\CreateDataRequest.class
+com\service1\threads\CheckStatusThread.class
+com\gateway\endpoints\Connection.class
+com\database\SqlConnection.class
+com\database\Connection.class
+com\model\ErrorResponse.class
+com\model\Id.class
+com\database\NosqlConnection.class
+com\model\LoadResponse.class
+com\gateway\Application.class
+com\model\DataResponse.class
+com\database\DatabaseSequence.class
+com\model\ConnectPortRequest.class

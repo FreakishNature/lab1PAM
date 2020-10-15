@@ -12,12 +12,14 @@ public class ChangeStatusThread extends Thread {
     Connection sqlConnection;
     int id;
     String task;
+    int processingTime;
+
     @Override
     public void run() {
         queue.add(task);
 
         try {
-            Thread.sleep(3_000);
+            Thread.sleep(processingTime);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -40,5 +42,6 @@ public class ChangeStatusThread extends Thread {
         this.id = id;
         this.sqlConnection = sqlConnection;
         this.task = task;
+        this.processingTime = processingTime;
     }
 }
