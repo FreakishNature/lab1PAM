@@ -45,7 +45,7 @@ public class Connection {
     }
 
 
-    @PostMapping
+    @PostMapping("/createConnection")
     public String createConnection(@RequestBody ConnectPortRequest connectPortRequest){
         try {
             cache.lpush("services",connectPortRequest.getPort());

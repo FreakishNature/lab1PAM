@@ -10,7 +10,7 @@ public class SqlConnection implements com.database.Connection {
     private static Connection con;
     private static Statement stmt;
     private static ResultSet rs;
-    private static final String url = "jdbc:mysql://" + com.gateway.endpoints.Connection.HOST + ":8080/lab1sql";
+    private static final String url = "jdbc:mysql://" + com.gateway.endpoints.Connection.HOST + "/lab1sql";
     private static final String user = "root";
     private static final String password = "";
 

@@ -25,7 +25,7 @@ public class Application {
                     .singletonMap("server.port", "300" + i));
 
             RestTemplate template = new RestTemplate();
-            ResponseEntity<String> entity = template.postForEntity(URI, new ConnectPortRequest("300" + i),String.class);
+            ResponseEntity<String> entity = template.postForEntity(URI + "/createConnection", new ConnectPortRequest("300" + i),String.class);
             // add error handling
 
             application.run(args);

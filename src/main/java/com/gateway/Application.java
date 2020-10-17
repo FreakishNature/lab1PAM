@@ -10,7 +10,7 @@ import java.util.Collections;
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) throws Exception {
-        Connection.HOST = args[0];
+//        Connection.HOST = args[0];
 
         SpringApplication application = new SpringApplication(Application.class);
         application.setDefaultProperties(Collections
